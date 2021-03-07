@@ -53,7 +53,7 @@ public class Сalculator {
                 flag = false;
                 continue;
             }
-            else if (buff == '+' || buff == '-' && !flag|| buff == '*' || buff == '/') { //Если прочитана операция
+            else if (buff == '+' || buff == '-' && !flag|| buff == '*' || buff == '/' || buff == '^') { //Если прочитана операция
                 if(stack_o.size() == 0) {
                     item.type = buff;
                     item.value = 0;
@@ -85,7 +85,7 @@ public class Сalculator {
                 stack_o.push(item);
                 continue;
             }
-            if (buff == ')'){
+            else if (buff == ')'){
                 while (stack_o.peek().type != '('){
                     if (!Maths()) { //Если функция вернет "false", то прекращаем работу
                         //
@@ -95,6 +95,23 @@ public class Сalculator {
                     else continue;
                 }
                 stack_o.pop();
+                continue;
+            }
+
+            if(buff == 's' || buff == 'c' || buff == 't' || buff == 'e'){
+                i += 2;
+                char buffTrigonam = expression.charAt(i);
+                if (buffTrigonam == 'g')
+                    item.type = buffTrigonam;
+                else item.type = buff;
+                item.value = 0;
+                stack_o.push(item);
+                continue;
+            }
+            if(buff == 'P') {
+                item.type = '0';
+                item.value = Math.PI;
+                stack_n.push(item);
                 continue;
             }
         }
@@ -159,6 +176,55 @@ public class Сalculator {
                 }
                 break;
 
+            case '^': //Если тип верхней операции из стека с операциями сложение
+                b = stack_n.pop().value;
+                c = Math.pow(b, a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item); //Результат операции кладется обратно в стек с числами
+                stack_o.pop();
+                break;
+
+            case 's':
+                c = Math.sin(a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item);
+                stack_o.pop();
+                break;
+
+            case 'c':
+                c = Math.cos(a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item);
+                stack_o.pop();
+                break;
+
+            case 't':
+                c = Math.tan(a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item);
+                stack_o.pop();
+                break;
+
+            case 'g':
+                c = Math.atan(a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item);
+                stack_o.pop();
+                break;
+
+            case 'e':
+                c = Math.exp(a);
+                item.type = '0';
+                item.value = c;
+                stack_n.push(item);
+                stack_o.pop();
+                break;
+
             default:
                 break;
         }
@@ -204,7 +270,13 @@ public class Сalculator {
             return 1;
         if (c == '*' || c == '/')
             return 2;
+        if(c == '^')
+            return 3;
+        if(c == 's' || c == 'c' || c == 't' || c == 'e' || c == 'g')
+            return 4;
         return 0;
     }
+
+
 
 }
