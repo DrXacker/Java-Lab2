@@ -26,34 +26,69 @@ public class Сalculator {
 
     public double mainCalc(){
         double value = 0d;
+        boolean flag = true;
         for(int i = 0; i < expression.length(); i++){
-            item = new Leksema();
-            if (expression.charAt(i) == '|') break;
-            if(expression.charAt(i) >= '0' && expression.charAt(i) <= '9'){
-                value = stringGetNumb(i);
-                item.type = '0';
-                item.value = value;
-                stack_n.push(item);
+            char buff = expression.charAt(i);
+            if (buff == '|') break;
+            if(buff >= '0' && buff <= '9' || buff == '-' && flag){
+                item = new Leksema();
+                if(buff == '-') {
+                    ++i;
+                    buff = expression.charAt(i);
+                    value = stringGetNumb(i);
+                    item.type = '0';
+                    item.value = -value;
+                    stack_n.push(item);
+                }
+                else{
+                    value = stringGetNumb(i);
+                    item.type = '0';
+                    item.value = value;
+                    stack_n.push(item);
+                }
                 i = stringGetLastIndNumb(i)-1;
+                flag = false;
+                continue;
             }
-            else if (expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*' || expression.charAt(i) == '/') { //Если прочитана операция
-                item.type = expression.charAt(i);
-                item.value = 0;
-                stack_o.push(item); //Операция кладется в стек с операциями
+            else if (buff == '+' || buff == '-' && !flag|| buff == '*' || buff == '/') { //Если прочитана операция
+                if(stack_o.size() == 0) {
+                    item = new Leksema();
+                    item.type = buff;
+                    item.value = 0;
+                    stack_o.push(item); //Операция кладется в стек с операциями
+                    continue;
+                }
+                if(stack_o.size() != 0 && getRang(buff) > getRang(stack_o.peek().type)){
+                    item = new Leksema();
+                    item.type = buff;
+                    item.value = 0;
+                    stack_o.push(item);
+                    continue;
+                }
+                if(stack_o.size() != 0 && getRang(buff) <= getRang(stack_o.peek().type)){
+                    if (!Maths()) { //Если функция вернет "false", то прекращаем работу
+                        //
+                        //надо это прекращать
+                        //
+                    }
+                    item = new Leksema();
+                    item.type = buff;
+                    item.value = 0;
+                    stack_o.push(item);
+                    continue;
+                }
+
             }
         }
 
-        boolean indicator = Maths();
-        double answer;
-        if (!indicator) { //Если функция вернет "false", то прекращаем работу
-            //
-            //надо это прекращать
-            //
+        while (stack_o.size() != 0){
+            if (!Maths()) { //Если функция вернет "false", то прекращаем работу
+                //
+                //надо это прекращать
+                //
+            }
         }
-        else{ //Если все хорошо, выдаем ответ
-            return stack_n.pop().value;
-        }
-        return -1d;
+        return stack_n.pop().value;
     }
 
     /**
@@ -64,14 +99,14 @@ public class Сalculator {
         item = new Leksema();
         double a, b, c;
         a = stack_n.pop().value; //Берется верхнее число из стека с числами
-        char character = stack_o.pop().type;
-        switch (character) {  //Проверяется тип верхней операции из стека с операциями
+        switch (stack_o.peek().type) {  //Проверяется тип верхней операции из стека с операциями
             case '+': //Если тип верхней операции из стека с операциями сложение
                 b = stack_n.pop().value;
                 c = a + b;
                 item.type = '0';
                 item.value = c;
                 stack_n.push(item); //Результат операции кладется обратно в стек с числами
+                stack_o.pop();
                 break;
 
             case '-':
@@ -80,6 +115,7 @@ public class Сalculator {
                 item.type = '0';
                 item.value = c;
                 stack_n.push(item);
+                stack_o.pop();
                 break;
 
             case '*':
@@ -88,6 +124,7 @@ public class Сalculator {
                 item.type = '0';
                 item.value = c;
                 stack_n.push(item);
+                stack_o.pop();
                 break;
 
             case '/':
@@ -100,6 +137,7 @@ public class Сalculator {
                     item.type = '0';
                     item.value = c;
                     stack_n.push(item);
+                    stack_o.pop();
                 }
                 break;
 
@@ -138,5 +176,17 @@ public class Сalculator {
         return index;
     }
 
+    /**
+     * Метод для определения приоритетности операции
+     * @param c - операция
+     * @return - номер приоритетности операции
+     */
+    private int getRang(char c){
+        if(c == '+' || c == '-')
+            return 1;
+        if (c == '*' || c == '/')
+            return 2;
+        return 0;
+    }
 
 }

@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CalculatorTest {
     @Test
     public void examplesTest(){
-        Сalculator exampleTest = new Сalculator("2+3*5");
+        Сalculator exampleTest = new Сalculator("-10+100-50-23");
         double answer = exampleTest.mainCalc();
-        assertEquals(15.0d, answer);
+        assertEquals(17.0d, answer);
     }
 
 }
