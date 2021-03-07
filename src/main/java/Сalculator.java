@@ -23,15 +23,18 @@ public class Сalculator {
      */
     private Leksema item;
 
-
+    /**
+     * Основной метод вычисления логического выражения
+     * @return - выводится значение выражения либо ошибка, из-за того что выражение написано неправильно
+     */
     public double mainCalc(){
         double value = 0d;
         boolean flag = true;
         for(int i = 0; i < expression.length(); i++){
+            item = new Leksema();
             char buff = expression.charAt(i);
-            if (buff == '|') break;
+            if (buff == ' ') continue;
             if(buff >= '0' && buff <= '9' || buff == '-' && flag){
-                item = new Leksema();
                 if(buff == '-') {
                     ++i;
                     buff = expression.charAt(i);
@@ -52,14 +55,12 @@ public class Сalculator {
             }
             else if (buff == '+' || buff == '-' && !flag|| buff == '*' || buff == '/') { //Если прочитана операция
                 if(stack_o.size() == 0) {
-                    item = new Leksema();
                     item.type = buff;
                     item.value = 0;
                     stack_o.push(item); //Операция кладется в стек с операциями
                     continue;
                 }
                 if(stack_o.size() != 0 && getRang(buff) > getRang(stack_o.peek().type)){
-                    item = new Leksema();
                     item.type = buff;
                     item.value = 0;
                     stack_o.push(item);
@@ -77,7 +78,24 @@ public class Сalculator {
                     stack_o.push(item);
                     continue;
                 }
-
+            }
+            if (buff == '('){
+                item.type = buff;
+                item.value = 0;
+                stack_o.push(item);
+                continue;
+            }
+            if (buff == ')'){
+                while (stack_o.peek().type != '('){
+                    if (!Maths()) { //Если функция вернет "false", то прекращаем работу
+                        //
+                        //надо это прекращать
+                        //
+                    }
+                    else continue;
+                }
+                stack_o.pop();
+                continue;
             }
         }
 
