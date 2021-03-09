@@ -6,14 +6,17 @@ public class Main {
         String example = in.nextLine();
         char[] var = new ReplacerExpression().checkRE(example);
 
-        Сalculator calc = new Сalculator(example);
-        if(var[1] == '-')
-            System.out.println("Ответ: "+calc.mainCalc());
+        if(var[0] == '-') {
+            Сalculator calc = new Сalculator(example);
+            double a = calc.mainCalc();
+            System.out.println("Ответ: " + a);
+        }
         else{
-            for(int i = 0; i < var.length; i++){
+            for(int i = 0; i < new ReplacerExpression().sizeRE(var); i++){
                 System.out.println(var[i]+"= ");
-                example.replaceAll(String.valueOf(var[i]), in.next());
+                example = example.replaceAll(String.valueOf(var[i]), in.next());
             }
+            Сalculator calc = new Сalculator(example);
             System.out.println("Ответ: "+calc.mainCalc());
         }
 

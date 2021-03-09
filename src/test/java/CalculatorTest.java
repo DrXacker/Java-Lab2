@@ -9,6 +9,9 @@ public class CalculatorTest {
         Сalculator exampleTest = new Сalculator("-2+2");
         assertEquals(0.0d, exampleTest.mainCalc());
 
+        exampleTest = new Сalculator("2^2");
+        assertEquals(4.0d, exampleTest.mainCalc());
+
         exampleTest = new Сalculator("sin(0)^2+cos(0)^2");
         assertEquals(1.0d, exampleTest.mainCalc());
 

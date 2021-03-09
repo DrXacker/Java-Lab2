@@ -37,9 +37,15 @@ public class Сalculator{
             if(buff >= '0' && buff <= '9' || buff == '-' && flag){
                 if(buff == '-' && flag) {
                     ++i;
-                    value = stringGetNumb(i);
-                    item.type = '0';
-                    item.value = -value;
+                    if(expression.charAt(i) == 'P') {
+                        item.type = '0';
+                        item.value = -Math.PI;
+                    }
+                    else {
+                        value = stringGetNumb(i);
+                        item.type = '0';
+                        item.value = -value;
+                    }
                 }
                 else{
                     value = stringGetNumb(i);
@@ -238,7 +244,13 @@ public class Сalculator{
     private double stringGetNumb(int index){
         char[] numberChar = new char[5];
         for(int i = index; i < expression.length(); i++){
-            if (expression.charAt(i) == '+' || expression.charAt(i) == '-' || expression.charAt(i) == '*' || expression.charAt(i) == '/' || expression.charAt(i) == '(' || expression.charAt(i) == ')')
+            if (expression.charAt(i) == '+'||
+                    expression.charAt(i) == '-'||
+                    expression.charAt(i) == '*'||
+                    expression.charAt(i) == '/'||
+                    expression.charAt(i) == '('||
+                    expression.charAt(i) == ')'||
+                    expression.charAt(i) == '^')
                 break;
             numberChar[i-index] = expression.charAt(i);
         }
@@ -252,7 +264,13 @@ public class Сalculator{
      */
     private int stringGetLastIndNumb(int index){
         for(; index < expression.length(); index++){
-            if (expression.charAt(index) == '+' || expression.charAt(index) == '-' || expression.charAt(index) == '*' || expression.charAt(index) == '/' || expression.charAt(index) == '(' || expression.charAt(index) == ')')
+            if (expression.charAt(index) == '+'||
+                    expression.charAt(index) == '-'||
+                    expression.charAt(index) == '*'||
+                    expression.charAt(index) == '/'||
+                    expression.charAt(index) == '('||
+                    expression.charAt(index) == ')'||
+                    expression.charAt(index) == '^')
                 break;
         }
         return index;
